@@ -1,6 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Button, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ScrollView,
+  FlatList,
+} from "react-native";
+import Item from "./src/components/Item";
 
 export default function App() {
   const [item, setItem] = useState("");
@@ -8,7 +17,7 @@ export default function App() {
 
   function handleAddItem() {
     console.log("Item: ", item);
-    setTasks([...tasks, item]);
+    setTasks([...tasks, item, done]);
     console.log("Tasks: ", tasks);
   }
 
@@ -26,11 +35,11 @@ export default function App() {
         />
         <Button onPress={handleAddItem} title="ADD" />
       </View>
-      <View style={styles.udalosti}>
-        {tasks.map((i) => {
-          <Text>{i}</Text>;
-        })}
-      </View>
+      <FlatList
+        data={tasks}
+        renderItem={({ item }) => <Item title={item} />}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }
@@ -52,9 +61,5 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 4,
     borderColor: "#1fecff",
-  },
-  udalosti: {
-    flex: 5,
-    backgroundColor: "#e59833",
   },
 });
