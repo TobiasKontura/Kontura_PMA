@@ -16,30 +16,40 @@ export default function App() {
   const [tasks, setTasks] = useState([]);
 
   function handleAddItem() {
+    const id = "id" + Math.random().toString(16).slice(2);
+    console.log(id);
     console.log("Item: ", item);
-    setTasks([...tasks, item, done]);
+    setTasks((prevTasks) => [
+      ...prevTasks,
+      { done: false, id: id, title: item },
+    ]);
+    setItem("");
     console.log("Tasks: ", tasks);
   }
 
-  function handleInputText(text) {
-    setItem(text);
+  function handleDeleteItem(id) {
+    setTasks((currentTasks) => {
+      return currentTasks.filter((task) => task.id !== id);
+    });
+  }
+
+  function handleClearTasks() {
+    setTasks([]);
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          onChangeText={handleInputText}
-          style={styles.input}
-          placeholder="Enter text here..."
+      <View>
+        <Text style={styles.nazov}>Počitadlo objednavok</Text>
+        <Text style={styles.pocet}>{tasks.length}</Text>
+        <Button style={styles.plus} onPress={handleAddItem} title="+" />
+        <Button style={styles.minus} onPress={handleDeleteItem} title="-" />
+        <Button
+          style={styles.clear}
+          onPress={handleClearTasks}
+          title="Vynulovať"
         />
-        <Button onPress={handleAddItem} title="ADD" />
       </View>
-      <FlatList
-        data={tasks}
-        renderItem={({ item }) => <Item title={item} />}
-        keyExtractor={(item) => item.id}
-      />
     </View>
   );
 }
@@ -48,18 +58,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 2,
-  },
-  inputContainer: {
-    flex: 1,
-    backgroundColor: "#afbb99",
-    justifyContent: "space-around",
     alignItems: "center",
-    flexDirection: "row",
+    justifyContent: "center",
   },
-
-  input: {
-    borderWidth: 3,
-    borderRadius: 4,
-    borderColor: "#1fecff",
+  nazov: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  pocet: {
+    fontSize: 80,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  plus: {
+    textAlign: "center",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  minus: {
+    backgroundColor: "#f44336",
+    marginBottom: 20,
+  },
+  clear: {
+    backgroundColor: "#ff9800",
+    marginBottom: 20,
   },
 });
